@@ -33,7 +33,6 @@ out_path     = args[3]
 #out_path     = '/fastscratch/dgatti/genotypes'
 
 check_file_access(in_file,           4)
-check_file_access(sanger_file,       4)
 check_file_access(dirname(out_path), 2)
 
 if(is.na(min_coverage)) {
