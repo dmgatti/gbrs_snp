@@ -77,7 +77,7 @@ for(chr in vcf_chr_names) {
   print(paste('Chromosome', chr))
 
   # Get all variants on this chromosome.
-  gr = GRanges(seqnames = '1', IRanges(start = 0, end = 200e6))
+  gr = GRanges(seqnames = chr, IRanges(start = 0, end = 200e6))
   param = ScanVcfParam(fixed = c('REF', 'ALT'), info = 'INDEL', 
                        samples = strains, geno = 'GT', 
                        which = gr)
