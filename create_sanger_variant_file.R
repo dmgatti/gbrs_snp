@@ -197,5 +197,6 @@ for(chr in vcf_chr_names) {
 # Zip and index the tabix file.
 print(paste('Zipping and indexing Tabix file.'))
 
-indexTabix(file = out_path, seq = 2L, start = 3L, end = 3L, skip = 8L)
+zipfile = bgzip(out_path, overwrite = TRUE)
+indexTabix(file = zipfile, seq = 2L, start = 3L, end = 3L, skip = 8L)
 
