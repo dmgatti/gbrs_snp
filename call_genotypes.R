@@ -124,7 +124,7 @@ stopifnot(all(nchar(counts$gt) <= 2))
 out_file = file.path(out_path, sub('counts', 'genotypes', basename(in_file)))
 print(paste('Writing', out_file))
 
-write.table(counts, file = out_file, quote = FALSE, row.names = FALSE)
+write.table(counts, file = out_file, sep = ',', quote = FALSE, row.names = FALSE)
 
 
 
