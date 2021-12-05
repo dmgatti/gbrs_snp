@@ -17,20 +17,18 @@ source('check_file_access.R')
 
 args = commandArgs(trailing = TRUE)
 
-if(length(args) != 4) {
+if(length(args) != 3) {
 
-  stop(paste('ERROR: Four arguments required: in_file, sanger_file, min_covarage, out_path'))
+  stop(paste('ERROR: Three arguments required: in_file, min_covarage, out_path'))
 
-} # if(length(args) != 4)
+} # if(length(args) != 3)
 
 in_file      = args[1]
-sanger_file  = args[2]
-min_coverage = as.numeric(args[3])
-out_path     = args[4]
+min_coverage = as.numeric(args[2])
+out_path     = args[3]
 
 # Test code
 #in_file       = '/fastscratch/dgatti/counts/Sample_100-GES15-05705_counts.csv'
-#sanger_file  = '/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv'
 #min_coverage = 10
 #out_path     = '/fastscratch/dgatti/genotypes'
 
@@ -40,7 +38,7 @@ check_file_access(dirname(out_path), 2)
 
 if(is.na(min_coverage)) {
 
-  stop(paste('ERROR: Minimum coverage  must be an integer. Found:', args[3]))
+  stop(paste('ERROR: Minimum coverage  must be an integer. Found:', args[2]))
 
 } # if(is.na(min_coverage))
 

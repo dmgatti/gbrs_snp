@@ -27,9 +27,6 @@ IN_FILES=(`ls ${IN_DIR}/*_counts.csv`)
 # Full path to input file for this run.
 IN_FILE=${IN_FILES[${SLURM_ARRAY_TASK_ID}]}
 
-# Full path to Sanger transcript variant file.
-SANGER_FILE=/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv
-
 # Minimum read depth to retain a variant call.
 # TBD: Add some mapping quality metric?
 MIN_COVERAGE=10
@@ -51,6 +48,6 @@ module load singularity
 
 echo Processing `basename ${IN_FILE}`
 
-singularity exec ${CONTAINER} Rscript ${RSCRIPT} ${IN_FILE} ${SANGER_FILE} ${MIN_COVERAGE} ${OUT_DIR}
+singularity exec ${CONTAINER} Rscript ${RSCRIPT} ${IN_FILE} ${MIN_COVERAGE} ${OUT_DIR}
 
 
