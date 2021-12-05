@@ -4,7 +4,7 @@
 #SBATCH --nodes 1 # number of nodes
 #SBATCH --ntasks 1 # number of cores
 #SBATCH --mem 8G # memory pool for all cores
-#SBATCH --time 0-1:00 # time (D-HH:MM)
+#SBATCH --time 0-0:30 # time (D-HH:MM)
 #SBATCH --array=00-19
 
 ################################################################################
