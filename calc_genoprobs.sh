@@ -18,7 +18,7 @@
 ##### VARIABLES #####
 
 # Full path to the output directory to contain the qtl2 files.
-QTL2_DIR=/projects/compsci/USERS/dgatti/projects/gbrs_snp/results/qtl2
+QTL2_DIR=/projects/compsci/USERS/dgatti/projects/gbrs_snp/results/qtl2/control.json
 
 # Number of cores to use. Must match --ntasks argument in slurm header above.
 NUM_CORES=10

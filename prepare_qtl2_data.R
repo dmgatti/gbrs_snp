@@ -86,7 +86,7 @@ cn = strsplit(sub('^#', '', colnames(vars)[1]), ',')[[1]]
 colnames(vars) = cn
 
 vars = subset(vars, vars$marker %in% geno$marker)
-vars = vars[match(geno$marker, vars$marker),]
+geno = geno[match(vars$marker, geno$marker),]
 stopifnot(all(geno$marker == vars$marker))
 vars = as.data.frame(vars)
 

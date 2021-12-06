@@ -84,3 +84,13 @@ Each script has a VARIABLES section at the top. The ones that need to be set are
 
    Run prepare_qtl2_data.sh
      which calls prepare_qtl2_data.R
+
+7. Read in the cross and calculate genoprobs and alleles probs.
+   Inputs:
+   * IN_FILE: Full path to qtl2 JSON control file.
+   * NUM_CORES: Integer that is the number of cores to use. Must match slurm header --ntasks option.
+
+   Output will be written in same directory as JSON file.
+
+   Run calc_genoprobs.sh
+     whic calls calc_genoprobs.R
