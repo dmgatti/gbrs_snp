@@ -40,7 +40,7 @@ OUT_DIR=/fastscratch/dgatti/counts
 OUT_FILE=${OUT_DIR}/${SAMPLE}
 
 # R Bioconductor container.
-CONTAINER=~/containers/bioconductor.sif
+CONTAINER=~/containers/gbrs_snp_r.sif
 
 # R script to run.
 RSCRIPT=get_variant_counts.R

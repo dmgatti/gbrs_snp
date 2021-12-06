@@ -31,7 +31,7 @@ ENSEMBL_VERSION=102
 OUT_FILE=/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv
 
 # R container with Bioconductor tools.
-CONTAINER=~/containers/gbrs_snp.sif
+CONTAINER=~/containers/gbrs_snp_r.sif
 
 # R script to run.
 RSCRIPT=/projects/compsci/USERS/dgatti/projects/gbrs_snp/scripts/create_sanger_variant_file.R

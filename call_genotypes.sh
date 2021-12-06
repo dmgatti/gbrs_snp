@@ -35,7 +35,7 @@ MIN_COVERAGE=10
 OUT_DIR=/fastscratch/dgatti/genotypes
 
 # R Bioconductor container.
-CONTAINER=~/containers/bioconductor.sif
+CONTAINER=~/containers/gbrs_snp_r.sif
 
 # R script to run.
 RSCRIPT=call_genotypes.R
