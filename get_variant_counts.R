@@ -63,6 +63,14 @@ for(chr in chr_names) {
   # Retain only SNPs for now.
   vars = subset(vars, indel == FALSE)
   
+  # Retain founder SNPs that are homozygous.
+  homo_alleles = c('A/A', 'T/T', 'G/G', 'C/C', '-/-')
+  geno_columns = c('A_J', 'C57BL_6J', '129S1_SvImJ', 'NOD_ShiLtJ', 
+                   'NZO_HlLtJ', 'CAST_EiJ', 'PWK_PhJ', 'WSB_EiJ')
+  prop_homo = rowMeans(matrix(as.matrix(vars[,geno_columns]) %in% homo_alleles,
+                       nrow = nrow(vars)))
+  vars = subset(vars, prop_homo == 1.0)
+  
   print(paste('Found', nrow(vars), 'variants on chr', chr))
   
   # Pileup BAM file on this chromosome.
