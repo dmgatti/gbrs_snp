@@ -1,0 +1,45 @@
+bootstrap: docker
+from: bioconductor/bioconductor_docker
+
+%post
+
+# Ubuntu updates (Bioconductor uses Ubuntu)
+apt update
+apt upgrade -y
+apt autoremove -y
+apt autoclean -y
+
+# Bioconductor packages
+R --slave -e "install.packages('Rcpp', repos = 'https://cloud.r-project.org/')"
+R --slave -e "library(BiocManager);\
+              BiocManager::install(c('AnnotationHub',\
+                                     'BiocParallel',\
+                                     'data.table', \
+                                     'ensembldb',\
+                                     'Rsamtools',\
+                                     'VariantAnnotation'));"
+
+R --slave -e "install.packages(c('qtl2', \
+                                 'qtl2convert', \
+                                 'tidyverse'));"
+
+R --slave -e "library(remotes);\
+              remotes::install_github('kbroman/mmconvert')"
+
+%runscript
+
+R --no-save
+
+%test
+
+#!/bin/sh
+exec R --slave -e "library(Rsamtools)"
+
+%labels
+
+NAME Genotyping by RNAseq using SNPs (GBRS) R packages.
+AUTHOR Daniel Gatti
+VERSION 1.0
+
+%help
+    These are the R packages required for the gbrs_snp pipeline.
