@@ -29,7 +29,7 @@ IN_FILE=${IN_FILES[${SLURM_ARRAY_TASK_ID}]}
 
 # Minimum read depth to retain a variant call.
 # TBD: Add some mapping quality metric?
-MIN_COVERAGE=10
+MIN_COVERAGE=20
 
 # Full path to output directory.
 OUT_DIR=/fastscratch/dgatti/genotypes

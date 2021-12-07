@@ -66,7 +66,7 @@ for(f in files) {
   if(is.null(geno)) {
     geno = tmp
   } else {
-    geno = merge(geno, tmp, by = 'marker', sort = FALSE)
+    geno = merge(geno, tmp, by = 'marker', all = TRUE, sort = FALSE)
   } # else
 
 } # for(f)
