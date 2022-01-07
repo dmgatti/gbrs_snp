@@ -5,7 +5,7 @@
 #SBATCH --ntasks 8 # number of cores
 #SBATCH --mem 32G # memory pool for all cores
 #SBATCH --time 0-2:00 # time (D-HH:MM)
-#SBATCH --array=00-19
+#SBATCH --array=00-129
 
 ################################################################################
 # Use RSEM & STAR to estimate gene counts aligned to mouse genome.
@@ -45,6 +45,8 @@ SAMTL_CONTAINER=~/containers/samtools_1.10.sif
 
 ### PROGRAM ###
 
+mkdir -p ${OUT_DIR}
+
 module load singularity
 
 SAMPLE=`basename ${FASTQ_FILE}`
@@ -54,6 +56,8 @@ echo Aligning ${SAMPLE}
 
 # BAM file.
 BAM=${OUT_DIR}/${SAMPLE}.STAR.genome.bam
+
+mkdir -p ${TEMP_DIR}/${SAMPLE}
 
 echo ${TEMP_DIR}/${SAMPLE}
 echo ${FASTQ_FILE}

@@ -38,6 +38,8 @@ CONTAINER=~/containers/star_rsem.sif
 
 ### PROGRAM ###
 
+mkdir -p ${INDEX_DIR}
+
 module load singularity
 
 echo 'Building genome reference'
