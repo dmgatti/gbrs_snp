@@ -5,7 +5,7 @@
 #SBATCH --ntasks 1 # number of cores
 #SBATCH --mem 8G # memory pool for all cores
 #SBATCH --time 0-0:30 # time (D-HH:MM)
-#SBATCH --array=00-19
+#SBATCH --array=000-129
 
 ################################################################################
 # Once the counts have been piled up at the Sanger variants, filter them and
@@ -29,7 +29,7 @@ IN_FILE=${IN_FILES[${SLURM_ARRAY_TASK_ID}]}
 
 # Minimum read depth to retain a variant call.
 # TBD: Add some mapping quality metric?
-MIN_COVERAGE=20
+MIN_COVERAGE=10
 
 # Full path to output directory.
 OUT_DIR=/fastscratch/dgatti/genotypes
