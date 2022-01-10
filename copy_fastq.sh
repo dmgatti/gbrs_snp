@@ -4,7 +4,7 @@
 #SBATCH --nodes 1 # number of nodes
 #SBATCH --ntasks 1 # number of cores
 #SBATCH --mem 8G # memory pool for all cores
-#SBATCH --time 0-1:00 # time (D-HH:MM)
+#SBATCH --time 0-3:00 # time (D-HH:MM)
 
 ################################################################################
 # Copy some Attie Islet FASTQ files from source directory to /fastscratch.
@@ -25,7 +25,7 @@ SAMPLE_DIRS=(`ls ${SRC_DIR}`)
 DEST_DIR=/fastscratch/dgatti/fastq
 
 # Number of samples to copy.
-NUM_SAMPLES=20
+NUM_SAMPLES=130
 
 mkdir -p ${DEST_DIR}
 
