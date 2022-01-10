@@ -3,7 +3,7 @@
 #SBATCH --partition dev
 #SBATCH --nodes 1 # number of nodes
 #SBATCH --ntasks 1 # number of cores
-#SBATCH --mem 32G # memory pool for all cores
+#SBATCH --mem 16G # memory pool for all cores
 #SBATCH --time 0-2:00 # time (D-HH:MM)
 
 ################################################################################
@@ -34,7 +34,7 @@ OUT_FILE=/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_ind
 CONTAINER=~/containers/gbrs_snp_r.sif
 
 # R script to run.
-RSCRIPT=/projects/compsci/USERS/dgatti/projects/gbrs_snp/scripts/create_sanger_variant_file.R
+RSCRIPT=/projects/compsci/USERS/dgatti/projects/gbrs_snp/scripts/gbrs_snp/create_sanger_variant_file.R
 
 ##### PROGRAM #####
 

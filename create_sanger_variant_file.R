@@ -85,6 +85,11 @@ for(chr in vcf_chr_names) {
 
   print(paste('Found', length(vcf), 'variants.'))
 
+  # For now, keep only SNPs.
+  vcf = subset(vcf, info(vcf)$INDEL == FALSE)
+
+  print(paste('Found', length(vcf), 'SNPs'))
+
   # Intersect variants with transcripts.
   trans_chr = subset(transcripts, seqnames(transcripts) == chr)
   vcf       = subsetByOverlaps(vcf, trans_chr)
@@ -99,6 +104,30 @@ for(chr in vcf_chr_names) {
   rm(gt)
 
   print(paste('Found', length(vcf), 'polymorphic variants.'))
+
+  # STITCH only accepts biallelic SNPs. Filter for now.
+  gt      = geno(vcf)$GT
+  alleles = apply(gt, 1, unique, simplify = FALSE)
+  # NOTE: We only have 7 strains. C57BL/6J is not in the genotypes
+  #       because it's the reference. Also, there are 36+ strains in
+  #       the file, so we could have quadramorphic SNPs with 1, 2, or 3 
+  #       alternate alleles. Other strains may contribute the other 
+  #       alleles, but the DO founders may have only 2 alleles. 
+  #       So, we could see all '1/1', all '2/2', all 3/3', 
+  #       or any of those mixed with '0/0'. I'm going to 
+  #       exclude heterozygous calls for now.
+  vcf     = subset(vcf, sapply(alleles, function(z) { all(z %in% c('0/0', '1/1', '2/2', '3/3')) }))
+
+  # At this point, we expect two or fewer alleles. If all strains are '1/1',
+  # then we have one allele in the file, but two in the DO founders because
+  # C57BL/6J is '0/0'. The same applies to '2/2' or '3/3'. However, if
+  # we have more than two alleles, then we have a non-biallelic SNP. 
+  gt      = geno(vcf)$GT
+  alleles = apply(gt, 1, unique)
+  vcf     = subset(vcf, sapply(alleles, length) <= 2)
+  rm(gt, alleles)
+
+  print(paste('Found', length(vcf), 'biallelic variants.'))
 
   # Extract genotypes and positions.
   vcf = genotypeCodesToNucleotides(vcf)
