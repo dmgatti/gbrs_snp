@@ -3,7 +3,7 @@
 #SBATCH --partition dev
 #SBATCH --nodes 1 # number of nodes
 #SBATCH --ntasks 1 # number of cores
-#SBATCH --mem 16G # memory pool for all cores
+#SBATCH --mem 8G # memory pool for all cores
 #SBATCH --time 0-2:00 # time (D-HH:MM)
 
 ################################################################################
