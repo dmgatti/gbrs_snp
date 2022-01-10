@@ -66,7 +66,10 @@ for(f in files) {
   if(is.null(geno)) {
     geno = tmp
   } else {
-    geno = merge(geno, tmp, by = 'marker', all = TRUE, sort = FALSE)
+    # Union of SNPs.
+#    geno = merge(geno, tmp, by = 'marker', all = TRUE, sort = FALSE)
+    # Intersection of SNPs.
+    geno = merge(geno, tmp, by = 'marker', all = FALSE, sort = FALSE)
   } # else
 
 } # for(f)

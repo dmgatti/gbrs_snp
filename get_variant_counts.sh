@@ -5,7 +5,7 @@
 #SBATCH --ntasks 1 # number of cores
 #SBATCH --mem 8G # memory pool for all cores
 #SBATCH --time 0-1:00 # time (D-HH:MM)
-#SBATCH --array=00-19
+#SBATCH --array=000-128
 
 ################################################################################
 # Pileup counts in genome BAM files (sorted & indexed) at the Sanger transcript
@@ -21,7 +21,7 @@
 BAM_DIR=/fastscratch/dgatti/rsem
 
 # Full path of BAM files in BAM_DIR.
-BAM_FILES=(`ls ${BAM_DIR}/*_sorted`)
+BAM_FILES=(`ls ${BAM_DIR}/*STAR.genome.bam_sorted`)
 
 # Full path to current BAM file.
 BAM_FILE=${BAM_FILES[${SLURM_ARRAY_TASK_ID}]}
