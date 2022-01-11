@@ -124,7 +124,8 @@ for(chr in vcf_chr_names) {
   # we have more than two alleles, then we have a non-biallelic SNP. 
   gt      = geno(vcf)$GT
   alleles = apply(gt, 1, unique)
-  vcf     = subset(vcf, sapply(alleles, length) <= 2)
+  alleles = lapply(alleles, function(z) { z[z != '0/0'] }
+  vcf     = subset(vcf, sapply(alleles, length) == 1)
   rm(gt, alleles)
 
   print(paste('Found', length(vcf), 'biallelic variants.'))
@@ -148,7 +149,7 @@ for(chr in vcf_chr_names) {
   # The ALT field contains all alternate alleles, including those not 
   # present in our samples. Get the alleles that occur in our samples
   # from the genotypes and filter the ALT alleles.
-  alleles = apply(gt, 1, unique)
+  alleles = apply(gt, 1, unique, simplify = FALSE)
   alleles = lapply(alleles, strsplit, split = '/')  
   alleles = lapply(alleles, unlist)
   alleles = lapply(alleles, unique)
@@ -156,6 +157,9 @@ for(chr in vcf_chr_names) {
                      x[x != y]
                    }, alleles, ref)
   alt = unstrsplit(alleles, sep = ",")
+
+  # Final check for biallelic SNP.
+  stopifnot(max(sapply(alt, nchar)) == 1)
 
   # Align transcripts with variants.
   ol = findOverlaps(positions, trans_chr)
@@ -207,7 +211,7 @@ for(chr in vcf_chr_names) {
     h[3] = '# Sanger: version 7'
     h[4] = '# Ensembl: 102'
     h[5] = '# Creator:Daniel Gatti'
-    h[6] = '# Email: dan.gatti@jas.org'
+    h[6] = '# Email: dan.gatti@jax.org'
     h[7] = '# Date: 2021-12-04'
     h[8] = paste0('#', paste0(colnames(output), collapse = ','))
 
