@@ -32,7 +32,7 @@ sanger_file = args[2]
 out_path    = args[3]
 
 # Test code
-#in_dir       = '/fastscratch/dgatti/genotypes'
+#in_dir       = '/fastscratch/dgatti/genotypes_05'
 #sanger_file  = '/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv.bgz'
 #out_path     = '/projects/compsci/USERS/dgatti/projects/gbrs_snp/results/qtl2'
 
@@ -66,11 +66,18 @@ for(f in files) {
   if(is.null(geno)) {
     geno = tmp
   } else {
+
     # Union of SNPs.
-#    geno = merge(geno, tmp, by = 'marker', all = TRUE, sort = FALSE)
+    print('Using UNION of SNPs')
+    geno = merge(geno, tmp, by = 'marker', all = TRUE, sort = FALSE)
+
     # Intersection of SNPs.
-    geno = merge(geno, tmp, by = 'marker', all = FALSE, sort = FALSE)
+#    print('Using INTERSECTION of SNPs')
+#    geno = merge(geno, tmp, by = 'marker', all = FALSE, sort = FALSE)
+
   } # else
+  
+  print(dim(geno))
 
 } # for(f)
 
@@ -83,7 +90,7 @@ for(i in 2:ncol(geno)) {
 print(paste(nrow(geno), 'markers in union of genotypes.'))
 
 # Get the founder variants at the same markers.
-vars = fread(paste('gunzip -cq', sanger_file), sep = '\t')
+vars = fread(cmd = paste('gunzip -cq', sanger_file), sep = '\t', skip = 7)
 # TBD: Use '\t' as column name delimiter in Sanger Tabix file.
 cn = strsplit(sub('^#', '', colnames(vars)[1]), ',')[[1]]
 colnames(vars) = cn

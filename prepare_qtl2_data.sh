@@ -20,7 +20,7 @@
 ##### VARIABLES #####
 
 # Full path to the genotype files.
-IN_DIR=/fastscratch/dgatti/genotypes
+IN_DIR=/fastscratch/dgatti/genotypes_200
 
 # Full path to Sanger transcript variant file.
 SANGER_FILE=/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv.bgz

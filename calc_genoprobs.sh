@@ -2,8 +2,8 @@
 #SBATCH --qos dev
 #SBATCH --partition dev
 #SBATCH --nodes 1 # number of nodes
-#SBATCH --ntasks 20 # number of cores
-#SBATCH --mem 64G # memory pool for all cores
+#SBATCH --ntasks 10 # number of cores
+#SBATCH --mem 180G # memory pool for all cores
 #SBATCH --time 0-8:00 # time (D-HH:MM)
 
 ################################################################################
@@ -21,7 +21,7 @@
 QTL2_DIR=/projects/compsci/USERS/dgatti/projects/gbrs_snp/results/qtl2/control.json
 
 # Number of cores to use. Must match --ntasks argument in slurm header above.
-NUM_CORES=20
+NUM_CORES=10
 
 # R Bioconductor container.
 CONTAINER=~/containers/gbrs_snp_r.sif

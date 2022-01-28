@@ -27,8 +27,11 @@ SANGER_FILE=${SANGER_DIR}/mgp_REL2005_snps_indels.vcf.gz
 # Ensembl version (we'll get teh EnsemblDB from AnnotationHub).
 ENSEMBL_VERSION=102
 
+# Output directory.
+OUT_DIR=/projects/compsci/USERS/dgatti/data/gbrs_snp
+
 # Full path to the output file.
-OUT_FILE=/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv
+OUT_FILE=${OUT_DIR}/sanger_transcript_snps_indels_ens102_b38.tsv
 
 # R container with Bioconductor tools.
 CONTAINER=~/containers/gbrs_snp_r.sif
@@ -42,3 +45,12 @@ module load singularity
 
 singularity exec ${CONTAINER} Rscript ${RSCRIPT} ${SANGER_FILE} ${ENSEMBL_VERSION} ${OUT_FILE}
 
+# Convert chromosome VCFs to IMPUTE haplotype and legend format.
+
+VCF_FILES=(`ls ${OUT_DIR}/*.vcf.bgz`)
+
+for F in ${VCF_FILES[@]}
+do
+  # ${F%%.*z} deletes everything from "." to "z" at the end of the string.
+  singularity exec ${CONTAINER} bcftools convert --haplegendsample ${F%%.*z} ${F}
+done

@@ -1,7 +1,12 @@
 ################################################################################
-# Given an Ensembl version and a Sanger file location, write out a tab-
-# delimited file containing the SNPs & Indels that intersect with transcripts
-# in the Sanger file. Then sort, zip and index the file.
+# Create QUILT reference files of SNPs in transcripts.
+#
+# Get Sanger variants that fall withing annotated transcripts. Use and EnsemblDB 
+# to get the transcript positions and query the Sanger Mouse Genomes SNP/INDEL file.
+# Output to sorted and indexed VCF.
+# Convert VCF to IMPUTE hap/legend/sample format.
+# Physical map
+# Genetic map
 #
 # Daniel Gatti
 # dan.gatti@jax.org
@@ -34,16 +39,19 @@ out_path        = args[3]
 # Test code
 #sanger_file     = '/projects/omics_share/mouse/GRCm38/genome/variants/snps_indels/rel_2004_v7/mgp_REL2005_snps_indels.vcf.gz'
 #ensembl_version = 102
-#out_path        = '/projects/compsci/USERS/dgatti/data/gbrs_snp/sanger_transcript_snps_indels_ens102_b38.tsv'
+#out_path        = '/projects/compsci/USERS/dgatti/data/gbrs_snp'
 
-check_file_access(sanger_file,       4)
-check_file_access(dirname(out_path), 2)
+check_file_access(sanger_file, 4)
+check_file_access(out_path,    2)
 
 if(is.na(ensembl_version)) {
 
   stop(paste('ERROR: Ensembl version must be an integer. Found:', args[2]))
 
 } # if(is.na(ensembl_version))
+
+# Output filename for SNPs in transcripts.
+out_file = file.path(out_path, 'sanger_transcript_snps_indels_ens102_b38.tsv')
 
 ##### PROGRAM #####
 
@@ -131,6 +139,9 @@ for(chr in vcf_chr_names) {
   alleles = apply(gt, 1, unique)
   alleles = lapply(alleles, function(z) { z[z != '0/0'] })
   vcf     = subset(vcf, sapply(alleles, length) == 1)
+  # When we expanded the VCF, some rows were duplicated. Remove them.
+  gt      = geno(vcf)$GT
+  vcf     = subset(vcf, !duplicated(rownames(gt)))
   rm(gt, alleles)
 
   print(paste('Found', length(vcf), 'biallelic variants.'))
@@ -148,17 +159,29 @@ for(chr in vcf_chr_names) {
   gt = gsub(pattern = '^3/3$', replacement = '1/1', gt)
   alleles = apply(gt, 1, unique)
   stopifnot(all(unique(unlist(alleles)) %in% c('0/0', '1/1')))
-  geno(vcf)$GT = gt
+  # Add in C57BL/6J.
+  # I can't figure out how to add a column to a VCF object. So I'm recreating it.
+  gt = cbind(gt[,1, drop = FALSE], C57BL_6J = '0/0', gt[,-1])
+  cd = colData(vcf)
+  cd = DataFrame(Samples = 1:8, row.names = c(rownames(cd)[1], 'C57BL_6J', rownames(cd)[-1]))
+  
+  vcf = VCF(rowRanges = rowRanges(vcf), 
+            colData   = cd, 
+            exptData  = metadata(vcf),
+            fixed     = fixed(vcf),
+            info      = info(vcf),
+            geno      = SimpleList(GT = gt),
+            collapsed = FALSE,
+            verbose   = FALSE)
+
+  # Final check for biallelic SNP.
+  stopifnot(max(nchar(fixed(vcf)$ALT)) == 1)
 
   # Write out VCF. We'll need this to make IMPUTE reference files for QUILT.
-  writeVcf(vcf, file = file.path(dirname(out_path), paste0('sanger_chr', chr, '.vcf')), index = TRUE)
+  writeVcf(vcf, file = file.path(out_path, paste0('sanger_chr', chr, '.vcf')), index = TRUE)
   # Not sure what warning here means yet...
 
-  # Extract genotypes and positions.
-  # The following line threw an error when I switched to ExpandedVCF.
-  # I'm not sure what the root cause is. It seems to be related to the ALT
-  # field not being a DNAStringSetList.
-  #vcf = genotypeCodesToNucleotides(vcf)
+  # Extract positions & genotypes.
   gt  = geno(vcf)$GT
   ref = as.character(fixed(vcf)$REF)
   alt = as.character(fixed(vcf)$ALT)
@@ -177,9 +200,6 @@ for(chr in vcf_chr_names) {
 
   rm(vcf)
   gc()
-
-  # Final check for biallelic SNP.
-  stopifnot(max(nchar(alt)) == 1)
 
   # Align transcripts with variants.
   ol = findOverlaps(positions, trans_chr)
@@ -235,12 +255,12 @@ for(chr in vcf_chr_names) {
     h[7] = '# Date: 2021-12-04'
     h[8] = paste0('#', paste0(colnames(output), collapse = ','))
 
-    writeLines(text = h, con = out_path)
+    writeLines(text = h, con = out_file)
 
   } # if(chr == '1')
 
-  write.table(output, file = out_path, sep = '\t', quote = FALSE,
-              row.names = FALSE, col.names = FALSE, append = TRUE)
+  write.table(output, file = out_file, sep = '\t', quote = FALSE, row.names = FALSE, 
+              col.names = FALSE, append = TRUE)
 
   rm(positions, gt, ref, alt, tr, ge, st, indel, output)
   gc()
@@ -250,6 +270,6 @@ for(chr in vcf_chr_names) {
 # Zip and index the tabix file.
 print(paste('Zipping and indexing Tabix file.'))
 
-zipfile = bgzip(out_path, overwrite = TRUE)
+zipfile = bgzip(out_file, overwrite = TRUE)
 indexTabix(file = zipfile, seq = 2L, start = 3L, end = 3L, skip = 8L)
 
